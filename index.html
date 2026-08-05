@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>经纬商学社</title>
+
+  <!-- ==================== 字体（系统原生，国内外通用） ==================== -->
+
+  <!-- Font Awesome 品牌图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- ==================== Lenis 平滑滚动 ==================== -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <style>
+    /* ================================================================
+       CSS RESET & 全局变量
+       ================================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* ── 配色（朝霞·暖金） ── */
+      --cream:    #FAF7F2;   /* 奶油白底 */
+      --sand:     #F5EDE0;   /* 暖沙色 */
+      --apricot:  #FDF0E0;   /* 浅杏 */
+      --gold:     #C8963E;   /* 暖金点缀 */
+      --gold-dk:  #A67B2E;   /* 深金 hover */
+      --orange:   #E8783B;   /* 活力橙 CTA */
+      --orange-dk:#C85A2A;   /* 橙 hover */
+      --ink:      #2B2B2B;   /* 墨灰文字 */
+      --ink-lt:   #6B6B6B;   /* 浅灰文字 */
+      --white:    #FFFFFF;
+      --border:   #E8E0D5;   /* 暖灰边框 */
+
+      /* ── 字体 ── */
+      --font-display: 'Songti SC', 'STSong', 'SimSun', 'Noto Serif CJK SC', serif;
+      --font-body:    'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'Noto Sans CJK SC', sans-serif;
+
+      /* ── 间距 ── */
+      --section-gap: 160px;
+      --content-max: 1200px;
+
+      /* ── 过渡 ── */
+      --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    html { scroll-behavior: auto; /* Lenis 接管 */ }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--cream);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ================================================================
+       导航栏
+       ================================================================ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.4s var(--ease-out),
+                  box-shadow 0.4s var(--ease-out),
+                  padding 0.4s var(--ease-out);
+    }
+    .nav.scrolled {
+      background: rgba(250, 247, 242, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 var(--border);
+      padding: 14px 40px;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink-lt);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--gold);
+      transition: width 0.3s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ================================================================
+       HERO 首屏
+       ================================================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 40px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(175deg, var(--cream) 0%, var(--apricot) 40%, var(--sand) 100%);
+    }
+    /* 柔光光晕 */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -15%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232, 120, 59, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(200, 150, 62, 0.10) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-transform: uppercase;
+      border: 1px solid var(--gold);
+      border-radius: 100px;
+      padding: 6px 20px;
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1s 0.1s forwards;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 8vw, 88px);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1s 0.3s forwards;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 300;
+      color: var(--ink-lt);
+      line-height: 1.8;
+      max-width: 520px;
+      margin: 0 auto 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero-cta {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      background: var(--ink);
+      text-decoration: none;
+      border-radius: 100px;
+      padding: 16px 48px;
+      transition: background 0.3s, transform 0.3s var(--ease-out);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1s 0.7s forwards;
+    }
+    .hero-cta:hover {
+      background: var(--gold);
+      transform: translateY(-2px);
+    }
+    /* 首屏按钮组（了解我们 + 荣誉空间） */
+    .hero-cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-cta-alt {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+      animation-delay: 0.85s;
+    }
+    .hero-cta-alt:hover {
+      background: var(--gold);
+      color: var(--white);
+      border-color: var(--gold);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      opacity: 0;
+      animation: fadeUp 1s 1.1s forwards;
+    }
+    .hero-scroll span {
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: var(--ink-lt);
+      margin: 0 auto 8px;
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    .hero-scroll p {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--ink-lt);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollLine {
+      0%, 100% { transform: scaleY(0.3); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+    }
+
+    /* ================================================================
+       通用区块
+       ================================================================ */
+    .section {
+      padding: var(--section-gap) 40px;
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+
+    /* ── 各模块渐变背景包装器 ── */
+    .section-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    /* 关于我们：奶油→暖沙 */
+    .section-wrap.about-bg {
+      background: linear-gradient(180deg, var(--cream) 0%, #FDF5E8 40%, var(--sand) 100%);
+    }
+    /* 组织架构：雾蓝灰→奶油（冷→暖，形成反差） */
+    .section-wrap.org-bg {
+      background: linear-gradient(180deg, #EEF0F0 0%, #F4F1EB 50%, var(--cream) 100%);
+    }
+    /* 部门介绍：暖沙→浅杏→奶油 */
+    .section-wrap.depts-bg {
+      background: linear-gradient(180deg, var(--sand) 0%, #F8EDDE 45%, var(--cream) 100%);
+    }
+    /* 活动展示：奶油→浅杏→暖沙 */
+    .section-wrap.activities-bg {
+      background: linear-gradient(180deg, var(--cream) 0%, #FDF3E5 50%, var(--sand) 100%);
+    }
+
+    /* 每个背景包装器里的柔光装饰 */
+    .section-wrap::before {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .section-wrap.about-bg::before {
+      top: 20%; right: -8%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(200, 150, 62, 0.06) 0%, transparent 70%);
+    }
+    .section-wrap.org-bg::before {
+      bottom: 10%; left: -6%;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(150, 170, 190, 0.05) 0%, transparent 70%);
+    }
+    .section-wrap.depts-bg::before {
+      top: 40%; right: -5%;
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(232, 120, 59, 0.05) 0%, transparent 70%);
+    }
+    .section-wrap.activities-bg::before {
+      top: 15%; left: -7%;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(200, 150, 62, 0.06) 0%, transparent 70%);
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+    .section-desc {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      line-height: 1.9;
+      max-width: 640px;
+    }
+    .section-header {
+      margin-bottom: 80px;
+    }
+
+    /* ── 淡入动画（Intersection Observer 触发） ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s var(--ease-out),
+                  transform 0.9s var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ================================================================
+       社团背景
+       ================================================================ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-image {
+      aspect-ratio: 4 / 5;
+      background: linear-gradient(135deg, var(--sand), var(--apricot));
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-image::after {
+      content: '';
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      letter-spacing: 0.06em;
+    }
+    .about-text h3 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .about-text p {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      line-height: 2;
+      margin-bottom: 16px;
+    }
+    /* 数据带 */
+    .stats-row {
+      display: flex;
+      gap: 60px;
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink-lt);
+      letter-spacing: 0.06em;
+      margin-top: 8px;
+    }
+
+    /* ================================================================
+       组织架构图
+       ================================================================ */
+    .org-chart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    /* 底层：3个部门并列 */
+    .org-bottom {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 740px;
+    }
+    .org-card {
+      flex: 1;
+      min-width: 160px;
+      max-width: 220px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 28px 24px;
+      text-align: center;
+      transition: transform 0.3s var(--ease-out),
+                  box-shadow 0.3s var(--ease-out);
+    }
+    .org-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+    .org-card .org-icon {
+      font-size: 34px;
+      margin-bottom: 16px;
+      color: var(--gold);
+    }
+    .org-card .org-name {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+    }
+    .org-card .org-role {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      letter-spacing: 0.06em;
+      margin-top: 6px;
+    }
+
+    /* ================================================================
+       部门详细介绍（4张卡片：竞赛部 + 3个下属部门）
+       ================================================================ */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+    .dept-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 36px 28px;
+      transition: transform 0.3s var(--ease-out),
+                  box-shadow 0.3s var(--ease-out);
+    }
+    .dept-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+    }
+    .dept-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      background: var(--apricot);
+      border-radius: 100px;
+      padding: 4px 16px;
+      margin-bottom: 24px;
+    }
+    .dept-name {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+      margin-bottom: 12px;
+    }
+    .dept-desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      line-height: 1.9;
+      margin-bottom: 24px;
+    }
+    .dept-func {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .dept-func li {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink-lt);
+      padding: 6px 16px;
+      background: var(--cream);
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+    .dept-func li::before {
+      content: '· ';
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* ================================================================
+       活动展示
+       ================================================================ */
+    .activity-scroll {
+      display: flex;
+      gap: 32px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+      scrollbar-width: none;         /* Firefox */
+      -ms-overflow-style: none;      /* IE/Edge */
+    }
+    .activity-scroll::-webkit-scrollbar { display: none; }
+
+    /* ── 轮播容器与箭头 ── */
+    .carousel { position: relative; }
+    .carousel-btn {
+      position: absolute;
+      top: 36%;
+      z-index: 5;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      transition: all 0.3s var(--ease-out);
+    }
+    .carousel-btn:hover {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+      transform: translateY(-2px);
+    }
+    .carousel-prev { left: -14px; }
+    .carousel-next { right: -14px; }
+
+    .activity-card {
+      flex: 0 0 380px;
+      scroll-snap-align: start;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.3s var(--ease-out),
+                  box-shadow 0.3s var(--ease-out);
+    }
+    .activity-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 56px rgba(0,0,0,0.08);
+    }
+    .activity-img {
+      aspect-ratio: 16 / 10;
+      background: linear-gradient(135deg, var(--sand), var(--apricot));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--ink-lt);
+      letter-spacing: 0.06em;
+    }
+    .activity-info {
+      padding: 28px 28px 32px;
+    }
+    .activity-date {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .activity-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+    .activity-excerpt {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      line-height: 1.7;
+    }
+
+    /* ================================================================
+       CTA 底部
+       ================================================================ */
+    .cta {
+      margin: 0 40px;
+      max-width: var(--content-max);
+      margin-left: auto;
+      margin-right: auto;
+      background: linear-gradient(160deg, var(--apricot), var(--sand));
+      border-radius: 12px;
+      padding: 100px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: -20%; right: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(232, 120, 59, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 2; }
+    .cta .section-title { margin-bottom: 20px; }
+    .cta .section-desc { margin: 0 auto 48px; }
+    .cta-btn {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      background: var(--ink);
+      text-decoration: none;
+      border-radius: 100px;
+      padding: 18px 52px;
+      transition: background 0.3s, transform 0.3s var(--ease-out);
+    }
+    .cta-btn:hover {
+      background: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    /* ================================================================
+       社交图标栏
+       ================================================================ */
+    .social-bar {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 60px 40px 40px;
+      text-align: center;
+    }
+    .social-bar-label {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--ink-lt);
+      margin-bottom: 28px;
+    }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+    .social-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out);
+      text-decoration: none;
+    }
+    .social-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+    .social-icon i {
+      font-size: 26px;
+      color: #888;
+      transition: color 0.3s;
+    }
+    .social-icon:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    }
+    .social-icon:hover .fa-weixin { color: #07C160; }
+    .social-icon:hover .fa-qq { color: #12B7F5; }
+    .social-icon:hover .fa-tiktok { color: #000; }
+
+    /* ================================================================
+       二维码上传弹窗
+       ================================================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: var(--cream);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 420px;
+      padding: 48px 40px 40px;
+      position: relative;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.12);
+      animation: modalIn 0.35s var(--ease-out);
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.92) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--ink-lt);
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--ink); }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .modal-sub {
+      font-size: 14px;
+      color: var(--ink-lt);
+      text-align: center;
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+    /* 二维码展示框（后台配置图片，页面不可上传） */
+    .modal-qr-box {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-qr-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .modal-qr-empty {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--ink-lt);
+      letter-spacing: 0.05em;
+      background: var(--cream);
+    }
+    .modal-qr-empty.show { display: flex; }
+
+    /* ================================================================
+       FOOTER
+       ================================================================ */
+    .footer {
+      text-align: center;
+      padding: 60px 40px;
+      color: var(--ink-lt);
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* ================================================================
+       响应式
+       ================================================================ */
+    @media (max-width: 860px) {
+      .nav { padding: 16px 24px; }
+      .nav.scrolled { padding: 12px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 0 24px; }
+      .hero-title { font-size: clamp(36px, 12vw, 56px); }
+      .hero-cta-group { gap: 12px; }
+      .section { padding: 80px 24px; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .dept-grid { grid-template-columns: 1fr; }
+      .dept-card { padding: 36px 28px; }
+      .org-bottom { flex-direction: column; align-items: center; gap: 20px; }
+      .org-card { width: 100%; max-width: 260px; padding: 24px 16px; }
+      .stats-row { gap: 32px; flex-wrap: wrap; }
+      .activity-card { flex: 0 0 280px; }
+      .carousel-btn { width: 36px; height: 36px; font-size: 18px; top: 34%; }
+      .carousel-prev { left: 4px; }
+      .carousel-next { right: 4px; }
+      .cta { padding: 64px 28px; margin: 0 24px; }
+      .social-bar { padding: 40px 24px 24px; }
+      .social-icons { gap: 24px; }
+      .social-icon { width: 48px; height: 48px; }
+      .social-icon i { font-size: 22px; }
+      .modal { padding: 36px 24px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== 导航栏 ==================== -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">经纬商学社</div>
+    <ul class="nav-links">
+      <li><a href="#about">关于我们</a></li>
+      <li><a href="#org">组织架构</a></li>
+      <li><a href="#depts">部门介绍</a></li>
+      <li><a href="honor-space.html">荣誉空间</a></li>
+      <li><a href="#activities">活动展示</a></li>
+      <li><a href="#join">加入我们</a></li>
+    </ul>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag">✦ 经纬商学社</div>
+      <h1 class="hero-title">
+        经纬商学<br>
+        <em>智创未来</em>
+      </h1>
+      <p class="hero-sub">
+        以竞赛为引领，以协作为基石，<br>汇聚每一份青年力量
+      </p>
+      <div class="hero-cta-group">
+        <a href="#about" class="hero-cta">了解我们</a>
+        <a href="honor-space.html" class="hero-cta hero-cta-alt">荣誉空间</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span></span>
+      <p>向下滚动</p>
+    </div>
+  </section>
+
+  <!-- ==================== 社团背景 ==================== -->
+  <div class="section-wrap about-bg">
+  <section class="section" id="about">
+    <div class="about-grid">
+      <div class="about-image reveal">
+        <img src="社团logo.png" alt="经纬商学社 LOGO"
+             style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:28px; background:var(--cream);">
+      </div>
+      <div class="about-text reveal reveal-delay-2">
+        <div class="section-label">About</div>
+        <div class="section-title" style="font-size: clamp(28px, 4vw, 40px);">
+          关于我们
+        </div>
+        <h3>以赛促学 · 智创未来</h3>
+        <p>
+          经纬商学社成立于2022年，是一个以学术竞赛为核心驱动力、
+          以团队协作为纽带的学生社团组织。
+          我们秉持"以赛促学、寓学于乐、学以致用"的理念，
+          致力于为每一位成员提供成长的平台、展示的舞台、
+          以及通往更广阔世界的窗口。
+        </p>
+        <p>
+          经纬商学社团秉持「以赛促学、寓学于乐、学以致用」的理念，立足传统商业竞赛锤炼实战能力，
+          拥抱人工智能拓展创新边界。我们通过脱口秀、话剧等创意形式将财经知识融入校园生活，
+          让商学不再枯燥；社团致力于为每一位成员搭建从课堂到赛场、再到职场的桥梁，
+          在实践中、前辈经验中，明晰就业方向，在经纬交织的商业世界中，
+          找到属于自己的坐标与方向。
+        </p>
+        <!-- 数据统计 -->
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-num"><span data-count="5">0</span>+</div>
+            <div class="stat-label">成立年数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num"><span data-count="200">0</span>+</div>
+            <div class="stat-label">累计成员</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num"><span data-count="30">0</span>+</div>
+            <div class="stat-label">承办活动</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div><!-- /about-bg -->
+
+  <!-- ==================== 组织架构 ==================== -->
+  <div class="section-wrap org-bg">
+  <section class="section" id="org">
+    <div class="section-header reveal">
+      <div class="section-label">Structure</div>
+      <div class="section-title">组织架构</div>
+      <div class="section-desc">
+        经纬商学社由竞赛部、活动中心、办公室三个部门组成，
+        各部门各司其职、紧密协作，共同驱动社团高效运转。
+      </div>
+    </div>
+
+    <div class="org-chart reveal reveal-delay-2">
+      <!-- 三个部门并列 -->
+      <div class="org-bottom">
+        <div class="org-card">
+          <div class="org-icon"><i class="fa-solid fa-trophy"></i></div>
+          <div class="org-name">竞赛部</div>
+          <div class="org-role">赛事培养 · 以赛促学</div>
+        </div>
+        <div class="org-card">
+          <div class="org-icon"><i class="fa-solid fa-calendar-check"></i></div>
+          <div class="org-name">活动中心</div>
+          <div class="org-role">策划执行 · 成长平台</div>
+        </div>
+        <div class="org-card">
+          <div class="org-icon"><i class="fa-solid fa-file-lines"></i></div>
+          <div class="org-name">办公室</div>
+          <div class="org-role">宣传运营 · 核心枢纽</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div><!-- /org-bg -->
+
+  <!-- ==================== 部门介绍 ==================== -->
+  <div class="section-wrap depts-bg">
+  <section class="section" id="depts">
+    <div class="section-header reveal">
+      <div class="section-label">Departments</div>
+      <div class="section-title">部门介绍</div>
+      <div class="section-desc">
+        每个部门各司其职、紧密协作，共同构成经纬商学社高效运转的核心力量。
+      </div>
+    </div>
+
+    <div class="dept-grid">
+      <!-- 竞赛部 -->
+      <div class="dept-card reveal">
+        <div class="dept-badge">竞赛赛事</div>
+        <div class="dept-name">竞赛部</div>
+        <div class="dept-desc">
+          竞赛部是经纬商学社的核心引擎，专注赛事人才挖掘与培养，
+          深耕赛前训练，坚持以赛促学、以赛育人，
+          通过层层选拔持续产出优秀竞赛队伍，
+          是社团最具拼搏精神的中坚力量。
+        </div>
+        <ul class="dept-func">
+          <li>赛事人才挖掘与培养</li>
+          <li>赛前训练深耕</li>
+          <li>参赛队伍选拔</li>
+          <li>以赛促学、以赛育人</li>
+          <li>竞赛战略规划</li>
+        </ul>
+      </div>
+
+      <!-- 活动中心 -->
+      <div class="dept-card reveal reveal-delay-2">
+        <div class="dept-badge">活动策划</div>
+        <div class="dept-name">活动中心</div>
+        <div class="dept-desc">
+          活动中心是社团活动的策划大脑与执行主力，
+          负责从创意构思到落地执行的全流程管理，
+          统筹现场安排与资源调度，
+          打造丰富多元的实践成长平台，确保每场活动精彩呈现。
+        </div>
+        <ul class="dept-func">
+          <li>活动策划与创意</li>
+          <li>落地执行与调度</li>
+          <li>现场统筹安排</li>
+          <li>实践成长平台打造</li>
+          <li>多元活动呈现</li>
+        </ul>
+      </div>
+
+      <!-- 办公室 -->
+      <div class="dept-card reveal reveal-delay-3">
+        <div class="dept-badge">综合事务</div>
+        <div class="dept-name">办公室</div>
+        <div class="dept-desc">
+          办公室是串联各部门运转的核心枢纽，
+          统筹活动记录与各类资料整理归档，
+          负责社团宣传运营与对外传播，
+          为社团高效协同运转提供坚实支撑。
+        </div>
+        <ul class="dept-func">
+          <li>统筹活动记录</li>
+          <li>资料整理归档</li>
+          <li>社团宣传运营</li>
+          <li>对外传播推广</li>
+          <li>跨部门协调枢纽</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  </div><!-- /depts-bg -->
+
+  <!-- ==================== 活动展示 ==================== -->
+  <div class="section-wrap activities-bg">
+  <section class="section" id="activities" style="overflow: hidden;">
+    <div class="section-header reveal">
+      <div class="section-label">Activities</div>
+      <div class="section-title">活动展示</div>
+      <div class="section-desc">
+        每一场活动都是经纬人的共同记忆，记录着我们的汗水与荣光。
+      </div>
+    </div>
+
+    <div class="carousel reveal reveal-delay-2">
+      <div class="activity-scroll">
+        <div class="activity-card">
+          <div class="activity-img"><img src="脱口秀情景剧.jpg" alt="脱口秀情景剧" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2026</div>
+            <div class="activity-title">脱口秀情景剧</div>
+            <div class="activity-excerpt">用幽默传递财经知识，以舞台演绎商业万象，让商学在笑声中走进校园生活。</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-img"><img src="迎新活动.jpg" alt="2025年迎新晚会" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2025.09</div>
+            <div class="activity-title">2025 迎新晚会</div>
+            <div class="activity-excerpt">星光璀璨的夜晚，经纬商学社大家庭齐聚一堂，以欢笑与掌声迎接每一位新成员的加入。</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-img"><img src="社团合作.jpg" alt="社团交流合作" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2024</div>
+            <div class="activity-title">社团交流合作</div>
+            <div class="activity-excerpt">加强社团间的交流协作，资源互通、经验共享，共同拓展成长边界。</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-img"><img src="考公经验分享会.jpg" alt="考公经验分享会" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2024</div>
+            <div class="activity-title">考公经验分享会</div>
+            <div class="activity-excerpt">资深前辈分享备考心得与职业路径，帮助大家明晰方向、少走弯路。</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-img"><img src="保研经验分享会.jpg" alt="保研经验分享会" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2024</div>
+            <div class="activity-title">保研经验分享会</div>
+            <div class="activity-excerpt">学长学姐倾囊相授，从规划到实战，为学弟学妹点亮继续深造的前行之路。</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-img"><img src="幼儿园活动.jpg" alt="幼儿园志愿活动" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2023</div>
+            <div class="activity-title">幼儿园志愿活动</div>
+            <div class="activity-excerpt">走进幼儿园开展公益志愿活动，用爱心与陪伴播撒温暖，践行青年担当。</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-img"><img src="相声表演.jpg" alt="相声表演" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2023</div>
+            <div class="activity-title">相声表演</div>
+            <div class="activity-excerpt">传统曲艺遇上现代商学，一捧一逗之间，让校园生活更有滋味。</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-img"><img src="社团成立一周年.jpg" alt="社团成立一周年" style="display:block; width:100%; height:100%; object-fit:cover;"></div>
+          <div class="activity-info">
+            <div class="activity-date">2023</div>
+            <div class="activity-title">社团成立一周年</div>
+            <div class="activity-excerpt">从无到有、一路同行。周年之际，新老成员齐聚一堂，回望初心，共话未来。</div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-btn carousel-prev" aria-label="上一张">‹</button>
+      <button class="carousel-btn carousel-next" aria-label="下一张">›</button>
+    </div>
+  </section>
+  </div><!-- /activities-bg -->
+
+  <!-- ==================== CTA 加入我们 ==================== -->
+  <section id="join">
+    <div class="cta reveal">
+      <div class="cta-inner">
+        <div class="section-label">Join Us</div>
+        <div class="section-title">与我们一起<br>书写下一章</div>
+        <div class="section-desc">
+          无论你是竞赛达人、创意能手还是组织能手，<br>
+          经纬商学社都有属于你的位置。
+        </div>
+        <a href="#" class="cta-btn">加入我们</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 社交图标 ==================== -->
+  <div class="social-bar reveal">
+    <div class="social-bar-label">关注我们</div>
+    <div class="social-icons">
+      <a class="social-icon" data-platform="微信" data-key="wechat" title="微信">
+        <i class="fab fa-weixin"></i>
+      </a>
+      <a class="social-icon" data-platform="QQ" data-key="qq" title="QQ">
+        <i class="fab fa-qq"></i>
+      </a>
+      <a class="social-icon" data-platform="抖音" data-key="douyin" title="抖音">
+        <i class="fab fa-tiktok"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- ==================== 二维码上传弹窗 ==================== -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-title" id="modalTitle">微信</div>
+      <div class="modal-sub" id="modalSub">扫码加入我们</div>
+      <div class="modal-qr-box">
+        <img class="modal-qr-img" id="qrImg" alt="平台二维码">
+        <div class="modal-qr-empty" id="qrEmpty">二维码暂未配置</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <p>© 2022 经纬商学社 · 保留所有权利</p>
+  </footer>
+
+  <!-- ==================== 脚本 ==================== -->
+  <script>
+    (function() {
+      /* ── Lenis 平滑滚动 ── */
+      const lenis = new Lenis({
+        duration: 1.3,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      /* ── 导航栏滚动变化 ── */
+      const nav = document.getElementById('nav');
+      window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 60);
+      }, { passive: true });
+
+      /* ── Intersection Observer 淡入动画 ── */
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+      /* ── 数字滚动动画 ── */
+      const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = parseInt(el.dataset.count, 10);
+          const duration = 2000;
+          const startTime = performance.now();
+
+          function update(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease-out
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(eased * target);
+            if (progress < 1) requestAnimationFrame(update);
+          }
+          requestAnimationFrame(update);
+          countObserver.unobserve(el);
+        });
+      }, { threshold: 0.6 });
+      document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+
+      /* ── 导航平滑跳转 ── */
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) lenis.scrollTo(target, { offset: -80 });
+        });
+      });
+
+      /* ── 社交图标 → 二维码弹窗（二维码由后台配置，页面不提供上传） ── */
+      const modalOverlay = document.getElementById('qrModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalSub = document.getElementById('modalSub');
+      const qrImg = document.getElementById('qrImg');
+      const qrEmpty = document.getElementById('qrEmpty');
+      const modalClose = document.getElementById('modalClose');
+
+      // 各平台二维码图片：把图片放到同目录，并在此处填写文件名即可（后台配置）
+      const QR_IMAGES = {
+        '微信': '社团微信.jpg',   // 暂无此图时点击会提示"暂未配置"
+        'QQ':   '社团qq群.jpg',
+        '抖音': '社团抖音.jpg',
+      };
+      const PLATFORM_MAP = {
+        '微信': { sub: '扫描二维码添加微信' },
+        'QQ':   { sub: '扫描二维码加入QQ群' },
+        '抖音': { sub: '扫描二维码关注抖音' },
+      };
+
+      function showQR(platform) {
+        modalTitle.textContent = platform;
+        modalSub.textContent = (PLATFORM_MAP[platform] || {}).sub || '扫码加入我们';
+        qrEmpty.classList.remove('show');
+        qrImg.style.display = 'block';
+        const src = QR_IMAGES[platform];
+        if (!src) {
+          qrEmpty.textContent = '二维码暂未配置';
+          qrEmpty.classList.add('show');
+          qrImg.style.display = 'none';
+          return;
+        }
+        qrImg.src = src;
+      }
+      // 图片缺失（例如微信二维码还没放进来）时的兜底提示
+      qrImg.addEventListener('error', () => {
+        qrEmpty.textContent = '二维码图片缺失，请后台配置';
+        qrEmpty.classList.add('show');
+        qrImg.style.display = 'none';
+      });
+
+      // 打开弹窗
+      document.querySelectorAll('.social-icon').forEach(icon => {
+        icon.addEventListener('click', (e) => {
+          e.preventDefault();
+          showQR(icon.dataset.platform);
+          modalOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      // 关闭弹窗
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      modalClose.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
+
+      /* ── 活动轮播：自动播放 + 左右切换 ── */
+      (function () {
+        const track = document.querySelector('.activity-scroll');
+        if (!track) return;
+        const cards = track.querySelectorAll('.activity-card');
+        if (cards.length < 2) return;
+
+        const gap = 32;
+        let index = 0;
+        let timer = null;
+        let paused = false;
+        let settleTimer = null;
+        const maxIndex = cards.length - 1;
+
+        const step = () => (cards[index] ? cards[index].offsetWidth : 380) + gap;
+
+        function goTo(i) {
+          if (i > maxIndex) i = 0;
+          if (i < 0) i = maxIndex;
+          index = i;
+          track.scrollTo({ left: index * step(), behavior: 'smooth' });
+        }
+        function next() { goTo(index + 1); }
+        function prev() { goTo(index - 1); }
+
+        function start() {
+          if (timer) clearInterval(timer);
+          timer = setInterval(() => {
+            if (paused || settleTimer) return;   // 悬停/滑动中不自动切换
+            next();
+          }, 3600);
+        }
+        function stop() { clearInterval(timer); timer = null; }
+
+        /* 悬停 / 触摸暂停 */
+        track.addEventListener('mouseenter', () => { paused = true; });
+        track.addEventListener('mouseleave', () => { paused = false; start(); });
+        track.addEventListener('touchstart', () => { paused = true; }, { passive: true });
+        track.addEventListener('touchend', () => { paused = false; start(); }, { passive: true });
+
+        /* 手动滑动结束后校准到最近的卡片 */
+        track.addEventListener('scroll', () => {
+          clearTimeout(settleTimer);
+          settleTimer = setTimeout(() => {
+            index = Math.round(track.scrollLeft / step());
+            settleTimer = null;
+          }, 120);
+        }, { passive: true });
+
+        /* 箭头切换 */
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+        if (prevBtn) prevBtn.addEventListener('click', () => { paused = true; prev(); start(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { paused = true; next(); start(); });
+
+        start();
+      })();
+    })();
+  </script>
+
+</body>
+</html>

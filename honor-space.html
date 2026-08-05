@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>荣誉空间 · 经纬商学社</title>
+
+  <!-- ==================== 字体（系统原生，国内外通用） ==================== -->
+
+  <!-- Font Awesome 品牌图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ================================================================
+       CSS RESET & 全局变量（与首页一致）
+       ================================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* ── 配色（朝霞·暖金） ── */
+      --cream:    #FAF7F2;   /* 奶油白底 */
+      --sand:     #F5EDE0;   /* 暖沙色 */
+      --apricot:  #FDF0E0;   /* 浅杏 */
+      --gold:     #C8963E;   /* 暖金点缀 */
+      --gold-dk:  #A67B2E;   /* 深金 hover */
+      --orange:   #E8783B;   /* 活力橙 CTA */
+      --orange-dk:#C85A2A;   /* 橙 hover */
+      --ink:      #2B2B2B;   /* 墨灰文字 */
+      --ink-lt:   #6B6B6B;   /* 浅灰文字 */
+      --white:    #FFFFFF;
+      --border:   #E8E0D5;   /* 暖灰边框 */
+
+      /* ── 字体 ── */
+      --font-display: 'Songti SC', 'STSong', 'SimSun', 'Noto Serif CJK SC', serif;
+      --font-body:    'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'Noto Sans CJK SC', sans-serif;
+
+      /* ── 间距 ── */
+      --section-gap: 160px;
+      --content-max: 1200px;
+
+      /* ── 过渡 ── */
+      --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #ccc;
+      background: #0a0a0a;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ================================================================
+       导航栏
+       ================================================================ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.4s var(--ease-out),
+                  box-shadow 0.4s var(--ease-out),
+                  padding 0.4s var(--ease-out);
+    }
+    .nav.scrolled {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+      padding: 14px 40px;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: #e0d8cc;
+      letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink-lt);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--gold);
+      transition: width 0.3s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ================================================================
+       荣誉之环（全屏舞台）
+       ================================================================ */
+    /* ── 荣誉环舞台：丝绒幕布 + 全屏 ── */
+    .sphere-section {
+      position: relative;
+      min-height: 100vh;
+      padding: 80px 40px 80px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background:
+        /* 丝绒幕布竖纹 */
+        repeating-linear-gradient(90deg,
+          transparent 0px, transparent 3px,
+          rgba(255,255,255,0.006) 3px, rgba(255,255,255,0.006) 5px),
+        /* 横向暗纹褶皱 */
+        repeating-linear-gradient(0deg,
+          transparent 0px, transparent 8px,
+          rgba(0,0,0,0.12) 8px, rgba(0,0,0,0.12) 9px,
+          transparent 9px, transparent 10px,
+          rgba(0,0,0,0.06) 10px, rgba(0,0,0,0.06) 11px),
+        /* 舞台纵深：从上到下由明转暗 */
+        linear-gradient(180deg,
+          rgba(40,25,15,0.7) 0%,
+          rgba(15,10,5,0.85) 25%,
+          rgba(0,0,0,0.95) 60%,
+          #000000 100%),
+        /* 底座黑色 */
+        #000000;
+    }
+    /* 顶部聚光灯锥形光束 */
+    .spotlight-beam {
+      position: absolute;
+      top: 0; left: 50%;
+      width: 700px; height: 100%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse 50% 12% at 50% 0%, rgba(255, 240, 210, 0.22) 0%, rgba(255, 220, 160, 0.08) 30%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: spotlightPulse 4s ease-in-out infinite;
+    }
+    @keyframes spotlightPulse {
+      0%, 100% { opacity: 0.85; }
+      50% { opacity: 1; }
+    }
+    /* 舞台底部微弱的暖光反射 */
+    .stage-glow {
+      position: absolute;
+      bottom: 0; left: 50%;
+      width: 900px; height: 300px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(180, 60, 30, 0.10) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── 红色飘带：从上向下飘落 ── */
+    .ribbon {
+      position: absolute;
+      top: -10%;
+      z-index: 0;
+      pointer-events: none;
+      width: 18px;
+      height: 160px;
+      border-radius: 9px;
+      opacity: 0.55;
+      background: linear-gradient(180deg,
+        rgba(200, 20, 30, 0.0) 0%,
+        rgba(210, 30, 40, 0.5) 8%,
+        rgba(230, 60, 50, 0.7) 25%,
+        rgba(190, 25, 35, 0.65) 50%,
+        rgba(220, 45, 50, 0.5) 75%,
+        rgba(180, 20, 30, 0.0) 100%
+      );
+      animation: ribbonFall var(--dur, 8s) var(--delay, 0s) linear infinite;
+      transform-origin: top center;
+    }
+    /* 飘带水平摇摆 + 下落 */
+    @keyframes ribbonFall {
+      0%   { transform: translateY(-20%) rotate(0deg) translateX(0px); opacity: 0; }
+      5%   { opacity: 0.55; }
+      25%  { transform: translateY(30%) rotate(6deg) translateX(30px); }
+      50%  { transform: translateY(55%) rotate(-4deg) translateX(-20px); }
+      75%  { transform: translateY(80%) rotate(3deg) translateX(15px); }
+      95%  { opacity: 0.5; }
+      100% { transform: translateY(115%) rotate(-2deg) translateX(-10px); opacity: 0; }
+    }
+    /* 各飘带不同尺寸/位置/速度 */
+    .ribbon-1 { left: 8%;  --dur: 7s; --delay: 0s;   width: 14px; height: 130px; }
+    .ribbon-2 { left: 18%; --dur: 9s; --delay: 1.5s; width: 20px; height: 180px; }
+    .ribbon-3 { left: 28%; --dur: 8s; --delay: 3s;   width: 12px; height: 140px; }
+    .ribbon-4 { left: 38%; --dur: 10s;--delay: 0.8s; width: 16px; height: 170px; }
+    .ribbon-5 { left: 48%; --dur: 7.5s;--delay: 4s;  width: 18px; height: 150px; }
+    .ribbon-6 { left: 58%; --dur: 9.5s;--delay: 2s;  width: 14px; height: 160px; }
+    .ribbon-7 { left: 68%; --dur: 8.5s;--delay: 5s;  width: 20px; height: 190px; }
+    .ribbon-8 { left: 78%; --dur: 7s; --delay: 3.5s; width: 13px; height: 135px; }
+    .ribbon-9 { left: 88%; --dur: 9s; --delay: 1s;   width: 17px; height: 155px; }
+
+    /* ── 浮尘粒子（痘印梦幻光效） ── */
+    .dust-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .dust {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 220, 160, 0.7);
+      animation: dustFloat var(--d-dur, 6s) var(--d-delay, 0s) ease-in-out infinite;
+    }
+    @keyframes dustFloat {
+      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      15%  { opacity: 0.8; }
+      30%  { transform: translateY(-60px) translateX(20px) scale(1.3); }
+      50%  { transform: translateY(-120px) translateX(-15px) scale(0.8); opacity: 0.6; }
+      70%  { transform: translateY(-200px) translateX(25px) scale(1.1); }
+      85%  { opacity: 0.3; }
+      100% { transform: translateY(-350px) translateX(-10px) scale(0.5); opacity: 0; }
+    }
+
+    .sphere-header {
+      text-align: center;
+      margin-bottom: 56px;
+      position: relative;
+      z-index: 1;
+    }
+    /* 深色舞台上的文字配色 */
+    .sphere-section .section-title { color: #F5EFE4; }
+    .sphere-section .section-desc  { color: rgba(245, 239, 228, 0.62); }
+    .sphere-section .sphere-hint   { color: rgba(245, 239, 228, 0.55); }
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+    .section-desc {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      line-height: 1.9;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ── 3D 球体舞台 ── */
+    .sphere-stage {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .sphere-scene {
+      width: 700px;
+      height: 700px;
+      perspective: 1800px;
+      perspective-origin: 50% 50%;
+      cursor: grab;
+      position: relative;
+      touch-action: none; /* 阻止触摸滚动，交给我们处理 */
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .sphere-scene.dragging {
+      cursor: grabbing;
+    }
+    .sphere-rotator {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    /* ── 证书卡片 ── */
+    .cert-card {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 200px;
+      height: 200px;
+      margin-left: -100px;
+      margin-top: -100px;
+      background: linear-gradient(160deg, #FFFEFA, #FCF3E3);
+      border: 1px solid rgba(200, 150, 62, 0.55);
+      border-radius: 4px;
+      box-shadow:
+        0 0 0 5px rgba(200, 150, 62, 0.18),
+        0 0 20px rgba(255, 200, 100, 0.25),
+        0 0 60px rgba(200, 130, 40, 0.15),
+        0 0 0 1px rgba(166, 123, 46, 0.35),
+        0 20px 50px rgba(0, 0, 0, 0.5);
+      display: flex;
+      /* 光晕由 JS 动态施加给正面卡片，不在 CSS 全局动画以避免 20 张卡同时重绘 */
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 18px;
+      /* 双面可见：转到环的另一面也能看到照片（反面为镜像） */
+      backface-visibility: visible;
+      -webkit-backface-visibility: visible;
+      will-change: transform;
+      text-align: center;
+    }
+    /* 内框装饰线 */
+    .cert-card::before {
+      content: '';
+      position: absolute;
+      inset: 9px;
+      border: 1px solid rgba(200, 150, 62, 0.35);
+      border-radius: 2px;
+      pointer-events: none;
+    }
+    .cert-card-top {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .cert-card-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+    .cert-card-subtitle {
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      color: var(--ink-lt);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .cert-card-divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+      margin-bottom: 16px;
+    }
+    .cert-card-body {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      text-align: center;
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+    }
+    .cert-card-seal {
+      position: absolute;
+      bottom: 22px; right: 22px;
+      width: 38px; height: 38px;
+      border: 2px solid rgba(200, 150, 62, 0.45);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 500;
+      color: rgba(166, 123, 46, 0.65);
+      transform: rotate(-15deg);
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+    }
+    .cert-card--image {
+      padding: 0;
+      overflow: hidden;
+    }
+    .cert-card--image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 0;
+      display: block;
+      background: rgba(250, 247, 242, 0.95);
+    }
+    .cert-card--image::before { display: none; }
+
+    /* ── 底部提示 ── */
+    .sphere-hint {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink-lt);
+      letter-spacing: 0.08em;
+      position: relative;
+      z-index: 1;
+    }
+    .sphere-hint em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    /* ── 淡入动画 ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s var(--ease-out),
+                  transform 0.9s var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ================================================================
+       FOOTER
+       ================================================================ */
+    .footer {
+      text-align: center;
+      padding: 60px 40px;
+      color: rgba(180, 170, 155, 0.6);
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      background: #0a0a0a;
+    }
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer a:hover { color: var(--gold-dk); }
+
+    /* ================================================================
+       响应式
+       ================================================================ */
+    @media (max-width: 860px) {
+      .nav { padding: 16px 24px; }
+      .nav.scrolled { padding: 12px 24px; }
+      .nav-links { gap: 20px; }
+      .sphere-section { padding: 60px 20px 80px; }
+      .spotlight-beam { width: 400px; }
+      .ribbon { width: 10px; height: 100px; }
+      .sphere-scene {
+        width: 360px;
+        height: 360px;
+        perspective: 1100px;
+      }
+      .cert-card {
+        width: 140px;
+        height: 140px;
+        margin-left: -70px;
+        margin-top: -70px;
+        padding: 18px 10px;
+        box-shadow:
+          0 0 0 4px rgba(200, 150, 62, 0.18),
+          0 0 16px rgba(255, 200, 100, 0.2),
+          0 0 40px rgba(200, 130, 40, 0.12),
+          0 14px 36px rgba(0, 0, 0, 0.45);
+      }
+      .cert-card::before { inset: 6px; }
+      .cert-card-top { font-size: 9px; margin-bottom: 5px; }
+      .cert-card-title { font-size: 18px; }
+      .cert-card-subtitle { font-size: 7px; margin-bottom: 10px; }
+      .cert-card-divider { width: 28px; margin-bottom: 10px; }
+      .cert-card-body { font-size: 10px; }
+      .cert-card-seal {
+        width: 28px; height: 28px;
+        font-size: 7px;
+        bottom: 14px; right: 14px;
+      }
+      .sphere-hint { margin-top: 24px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== 导航栏 ==================== -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">经纬商学社 · 荣誉空间</div>
+    <ul class="nav-links">
+      <li><a href="index.html">← 返回首页</a></li>
+    </ul>
+  </nav>
+
+  <!-- ==================== 荣誉之环（全屏） ==================== -->
+  <section class="sphere-section" id="sphere">
+    <!-- 聚光灯锥形光束 -->
+    <div class="spotlight-beam"></div>
+    <!-- 舞台底部暖光 -->
+    <div class="stage-glow"></div>
+    <!-- 红色飘带 × 9 -->
+    <div class="ribbon ribbon-1"></div>
+    <div class="ribbon ribbon-2"></div>
+    <div class="ribbon ribbon-3"></div>
+    <div class="ribbon ribbon-4"></div>
+    <div class="ribbon ribbon-5"></div>
+    <div class="ribbon ribbon-6"></div>
+    <div class="ribbon ribbon-7"></div>
+    <div class="ribbon ribbon-8"></div>
+    <div class="ribbon ribbon-9"></div>
+    <!-- 浮尘粒子（豆印梦幻光效） -->
+    <div class="dust-container" id="dustContainer">
+      <!-- JS 动态注入粒子 -->
+    </div>
+
+    <div class="sphere-header reveal">
+      <div class="section-label">Honor Ring</div>
+      <div class="section-title">荣誉之环</div>
+      <div class="section-desc">
+        二十份记忆，二十段故事。<br>拖拽旋转或双指缩放，让每一份记忆都为你停留。
+      </div>
+    </div>
+
+    <div class="sphere-stage reveal reveal-delay-1">
+      <div class="sphere-scene" id="sphereScene">
+        <!-- 荣誉照片由 JS 注入 -->
+      </div>
+    </div>
+
+    <p class="sphere-hint reveal reveal-delay-2">
+      <em>✦</em> 拖拽旋转 · 滚轮缩放 · 双指缩放 <em>✦</em>
+    </p>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <p>© 2022 经纬商学社 · 保留所有权利</p>
+    <p style="margin-top: 8px;">
+      <a href="index.html">返回首页</a> · <a href="honor-space.html">荣誉空间</a>
+    </p>
+  </footer>
+
+  <script>
+    /* ================================================================
+       荣誉展示控制器（3D 环形 / 平铺网格 · 滚轮与双指缩放 · 拖拽交互）
+       ================================================================ */
+    (function () {
+
+      /* ── 荣誉照片墙：图片1 ~ 图片20（20 张） ── */
+      var CERT_DEFS = [
+        { image: '图片1.png' },
+        { image: '图片2.png' },
+        { image: '图片3.png' },
+        { image: '图片4.png' },
+        { image: '图片5.png' },
+        { image: '图片6.png' },
+        { image: '图片7.png' },
+        { image: '图片8.png' },
+        { image: '图片9.png' },
+        { image: '图片10.png' },
+        { image: '图片11.png' },
+        { image: '图片12.png' },
+        { image: '图片13.png' },
+        { image: '图片14.png' },
+        { image: '图片15.png' },
+        { image: '图片16.png' },
+        { image: '图片17.png' },
+        { image: '图片18.png' },
+        { image: '图片19.png' },
+        { image: '图片20.jpg' }
+      ];
+
+      var scene = document.getElementById('sphereScene');
+      if (!scene) return;
+
+      /* ── 尺寸参数（随窗口自适应） ── */
+      var isMobile = window.innerWidth < 600;
+      var BASE_RADIUS = isMobile ? 440 : 750;   // 环形半径（大间距，卡片正对屏幕）
+      var CARD_W = isMobile ? 140 : 200;        // 卡片宽（与 CSS 一致）
+      var CARD_H = isMobile ? 140 : 200;        // 卡片高
+      var ZOOM_MIN = 0.45, ZOOM_MAX = 3;        // 缩放范围
+
+      /* ── 状态（纯环形模式） ── */
+      var zoom = 1;
+      var rotX = -14, rotY = 0;     // 当前旋转角
+      var tRotX = -14, tRotY = 0;   // 目标旋转角
+      var velX = 0, velY = 0;       // 惯性速度
+      var dragging = false, pinching = false, pinchDist = 0;
+      var lastX = 0, lastY = 0, lastTime = performance.now();
+      var autoRotating = true, autoResumeTimer = null;
+
+      /* ── 舞台与卡片 ── */
+      var stage = document.createElement('div');
+      stage.className = 'sphere-rotator';
+      scene.appendChild(stage);
+
+      var cards = CERT_DEFS.map(function (def) {
+        var card = document.createElement('div');
+        card.className = 'cert-card' + (def.image ? ' cert-card--image' : '');
+        card.innerHTML = '<img src="' + def.image + '" alt="荣誉照片">';
+        stage.appendChild(card);
+        return card;
+      });
+
+      /* ── 环形分布：20 张卡片均匀立在 360° 圆环上，全部正对屏幕 ── */
+      function applyTransforms() {
+        var n = cards.length;
+        stage.style.transformStyle = 'preserve-3d';
+        stage.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+        var r = BASE_RADIUS * zoom;
+        for (var i = 0; i < n; i++) {
+          var ang = (i / n) * 2 * Math.PI;
+          var x = Math.sin(ang) * r;
+          var z = Math.cos(ang) * r;
+          cards[i].style.transform =
+            'translateX(' + x + 'px) translateZ(' + z + 'px)';
+        }
+      }
+
+      function setZoom(z) {
+        zoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, z));
+        applyTransforms();
+      }
+
+      /* ================================================================
+         交互：拖拽 + 双指缩放 + 滚轮缩放
+         ================================================================ */
+      function pt(e) { return e.touches ? e.touches[0] : e; }
+      function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+
+      function onDown(e) {
+        e.preventDefault();
+        if (e.touches && e.touches.length === 2) {
+          pinching = true;
+          pinchDist = dist(e.touches[0], e.touches[1]);
+          return;
+        }
+        if (e.touches && e.touches.length > 1) return;
+        dragging = true;
+        autoRotating = false;
+        clearTimeout(autoResumeTimer);
+        scene.classList.add('dragging');
+        var p = pt(e);
+        lastX = p.clientX; lastY = p.clientY;
+        velX = 0; velY = 0;
+      }
+
+      function onMove(e) {
+        if (!dragging && !pinching) return;
+        e.preventDefault();
+        /* 双指缩放 */
+        if (e.touches && e.touches.length === 2) {
+          var d = dist(e.touches[0], e.touches[1]);
+          if (pinchDist > 0) setZoom(zoom * (d / pinchDist));
+          pinchDist = d;
+          return;
+        }
+        if (!dragging) return;
+        var p = pt(e);
+        var dx = p.clientX - lastX;
+        var dy = p.clientY - lastY;
+        lastX = p.clientX; lastY = p.clientY;
+        tRotY += dx * 0.4;
+        tRotX = Math.max(-35, Math.min(5, tRotX + dy * 0.3));
+        velY = dx * 0.4;
+      }
+
+      function onUp() {
+        if (pinching) { pinching = false; pinchDist = 0; return; }
+        if (!dragging) return;
+        dragging = false;
+        scene.classList.remove('dragging');
+        autoResumeTimer = setTimeout(function () { autoRotating = true; }, 1500);
+      }
+
+      function onWheel(e) {
+        e.preventDefault();
+        setZoom(zoom * (e.deltaY < 0 ? 1.08 : 0.92));
+      }
+
+      scene.addEventListener('mousedown', onDown);
+      scene.addEventListener('touchstart', onDown, { passive: false });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('mouseup', onUp);
+      window.addEventListener('touchend', onUp);
+      window.addEventListener('touchcancel', onUp);
+      scene.addEventListener('wheel', onWheel, { passive: false });
+
+      /* ================================================================
+         动画循环（自动旋转 + 惯性衰减）
+         ================================================================ */
+      function animate(ts) {
+        var dt = Math.min((ts - lastTime) / 1000, 0.1);
+        lastTime = ts;
+        if (autoRotating && !dragging) tRotY += 0.35 * dt * 60;
+        if (!dragging) {
+          tRotX += velX * dt * 60;
+          tRotY += velY * dt * 60;
+          var f = Math.pow(0.93, dt * 60);
+          velX *= f; velY *= f;
+          if (Math.abs(velX) < 0.005) velX = 0;
+          if (Math.abs(velY) < 0.005) velY = 0;
+        }
+        rotX += (tRotX - rotX) * 0.08;
+        rotY += (tRotY - rotY) * 0.08;
+        applyTransforms();
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+
+      /* ================================================================
+         初始化
+         ================================================================ */
+      applyTransforms();
+
+      /* 窗口尺寸变化时重新计算参数 */
+      var resizeTimer = null;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          isMobile = window.innerWidth < 600;
+          BASE_RADIUS = isMobile ? 440 : 750;
+          CARD_W = isMobile ? 140 : 200;
+          CARD_H = isMobile ? 140 : 200;
+          applyTransforms();
+        }, 150);
+      });
+
+      /* 导航毛玻璃 */
+      var nav = document.getElementById('nav');
+      window.addEventListener('scroll', function () {
+        nav.classList.toggle('scrolled', window.scrollY > 60);
+      }, { passive: true });
+
+      /* 淡入动画 */
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(function (el) {
+        observer.observe(el);
+      });
+
+      /* ── 浮尘粒子生成（痘印梦幻光效） ── */
+      (function initDust() {
+        var container = document.getElementById('dustContainer');
+        if (!container) return;
+        var COUNT = 40;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < COUNT; i++) {
+          var dot = document.createElement('span');
+          dot.className = 'dust';
+          var size = 2 + Math.random() * 5; /* 2-7px */
+          dot.style.width  = size + 'px';
+          dot.style.height = size + 'px';
+          dot.style.left   = (10 + Math.random() * 80) + '%';  /* 聚光灯范围内 */
+          dot.style.top    = (20 + Math.random() * 80) + '%';
+          dot.style.setProperty('--d-dur',   (5 + Math.random() * 8) + 's');
+          dot.style.setProperty('--d-delay', (Math.random() * 7) + 's');
+          /* 暖金或暖白粒子 */
+          var colors = [
+            'rgba(255,220,150,0.7)',
+            'rgba(255,240,200,0.6)',
+            'rgba(255,200,120,0.5)',
+            'rgba(255,255,230,0.55)',
+            'rgba(255,180,100,0.45)',
+          ];
+          dot.style.background = colors[Math.floor(Math.random() * colors.length)];
+          frag.appendChild(dot);
+        }
+        container.appendChild(frag);
+      })();
+    })();
+  </script>
+</body>
+</html>
