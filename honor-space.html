@@ -457,26 +457,85 @@
     }
     .footer a:hover { color: var(--gold-dk); }
 
+    /* ── 汉堡菜单按钮 ── */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 1001;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px; height: 2px;
+      background: #ccc;
+      border-radius: 1px;
+      transition: all 0.3s var(--ease-out);
+      transform-origin: center;
+    }
+    .nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.active span:nth-child(2) { opacity: 0; }
+    .nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── 手机端全屏菜单 ── */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease-out);
+    }
+    .mobile-menu.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .mobile-menu a {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 500;
+      color: #d0c8b8;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+
     /* ================================================================
        响应式
        ================================================================ */
     @media (max-width: 860px) {
-      .nav { padding: 16px 24px; }
-      .nav.scrolled { padding: 12px 24px; }
-      .nav-links { gap: 20px; }
-      .sphere-section { padding: 60px 20px 80px; }
-      .spotlight-beam { width: 400px; }
+      .nav { padding: 16px 20px; }
+      .nav.scrolled { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .sphere-section { padding: 40px 16px 60px; min-height: 100vh; }
+      .sphere-header { margin-bottom: 32px; }
+      .section-title { font-size: 28px; }
+      .section-desc { font-size: 14px; }
+      .spotlight-beam { width: 340px; }
       .ribbon { width: 10px; height: 100px; }
       .sphere-scene {
-        width: 360px;
-        height: 360px;
+        width: 340px;
+        height: 340px;
         perspective: 1100px;
       }
       .cert-card {
-        width: 140px;
-        height: 140px;
-        margin-left: -70px;
-        margin-top: -70px;
+        width: 120px;
+        height: 120px;
+        margin-left: -60px;
+        margin-top: -60px;
         padding: 18px 10px;
         box-shadow:
           0 0 0 4px rgba(200, 150, 62, 0.18),
@@ -495,7 +554,8 @@
         font-size: 7px;
         bottom: 14px; right: 14px;
       }
-      .sphere-hint { margin-top: 24px; font-size: 12px; }
+      .sphere-hint { margin-top: 20px; font-size: 12px; }
+      .footer { padding: 40px 20px; font-size: 12px; }
     }
   </style>
 </head>
@@ -507,7 +567,15 @@
     <ul class="nav-links">
       <li><a href="index.html">← 返回首页</a></li>
     </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- 手机端全屏菜单 -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">← 返回首页</a>
+  </div>
 
   <!-- ==================== 荣誉之环（全屏） ==================== -->
   <section class="sphere-section" id="sphere">
@@ -743,6 +811,24 @@
           applyTransforms();
         }, 150);
       });
+
+      /* ── 手机端汉堡菜单 ── */
+      var navToggle = document.getElementById('navToggle');
+      var mobileMenu = document.getElementById('mobileMenu');
+      if (navToggle && mobileMenu) {
+        navToggle.addEventListener('click', function () {
+          navToggle.classList.toggle('active');
+          mobileMenu.classList.toggle('active');
+          document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        mobileMenu.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () {
+            navToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+          });
+        });
+      }
 
       /* 导航毛玻璃 */
       var nav = document.getElementById('nav');
